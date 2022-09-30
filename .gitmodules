@@ -1,0 +1,6 @@
+[submodule "HurmaEngine/3dparty/plog"]
+	path = HurmaEngine/3dparty/plog
+	url = https://github.com/SergiusTheBest/plog
+[submodule "HurmaEngine/3dparty/spdlog"]
+	path = HurmaEngine/3dparty/spdlog
+	url = https://github.com/gabime/spdlog

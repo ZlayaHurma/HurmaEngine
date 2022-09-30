@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Hurma">
+      <UniqueIdentifier>{2200580D-8E14-80BE-5796-231EC3697CEF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hurma\Log">
+      <UniqueIdentifier>{F358DAFB-5FC3-8E72-A801-401814AB6CC7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Hurma\Log\impl">
+      <UniqueIdentifier>{D4DA74F4-C0A8-68FA-A93C-D92095A9445F}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Hurma.h" />
+    <ClInclude Include="src\Hurma\Application.h">
+      <Filter>Hurma</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hurma\Core.h">
+      <Filter>Hurma</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hurma\EntryPoint.h">
+      <Filter>Hurma</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hurma\Log\ILog.h">
+      <Filter>Hurma\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hurma\Log\Log.h">
+      <Filter>Hurma\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hurma\Log\impl\SpdLogger.h">
+      <Filter>Hurma\Log\impl</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Hurma\Application.cpp">
+      <Filter>Hurma</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hurma\Log\Log.cpp">
+      <Filter>Hurma\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hurma\Log\impl\SpdLogger.cpp">
+      <Filter>Hurma\Log\impl</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

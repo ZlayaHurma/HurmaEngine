@@ -1,5 +1,5 @@
 #pragma once
 
-#include "Application.h"
+#include "Hurma/Application.h"
 
-#include "EntryPoint.h"
+#include "Hurma/EntryPoint.h"

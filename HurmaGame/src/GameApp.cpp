@@ -1,9 +1,13 @@
 #include "Hurma.h" 
+#include "Hurma/Log/Log.h"
 
 class GameApplication : public Hurma::Application
 {
  public:
-     GameApplication(){}
+     GameApplication()
+     {
+        Hurma::Log::logInfo("Hello from the client!");
+     }
      ~GameApplication(){}
 };
 
