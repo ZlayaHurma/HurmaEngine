@@ -9,6 +9,8 @@ workspace "HurmaEngine"
 	}
 	
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+
+include "HurmaEngine/3dParty/GLFW"
 	
 project "HurmaEngine"
 	location "HurmaEngine"
@@ -19,6 +21,11 @@ project "HurmaEngine"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 	
+    links
+	{
+		"GLFW"
+	}
+
 	files
 	{
 		"%{prj.name}/src/**.h",
@@ -29,6 +36,7 @@ project "HurmaEngine"
 	{
 		"%{prj.name}/3dparty/plog/include",
 		"%{prj.name}/3dparty/spdlog/include",
+        "%{prj.name}/3dparty/GLFW/include",
 		"%{prj.name}/src"
 	} 
 	
@@ -37,15 +45,15 @@ project "HurmaEngine"
 		staticruntime "On"
 		systemversion "latest"
 		
-		defines 
-		{
-			"HURMA_BUILD"
-		}
-		
-		postbuildcommands
-		{
-			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/HurmaGame")
-		}
+	defines 
+	{
+		"HURMA_BUILD"
+	}
+	
+	postbuildcommands
+	{
+		("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/HurmaGame")
+	}
 	
 	filter "configurations:Debug"
 		defines "HURMA_DEBUG"
