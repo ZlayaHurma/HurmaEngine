@@ -1,10 +1,10 @@
 #pragma once
 #include "Hurma/IWindow.h"
-#include "GLFW/glfw3.h"
+
+struct GLFWwindow;
 
 namespace Hurma
 {
-
     class GLFWWindow : public IWindow
     {
         
@@ -12,31 +12,30 @@ namespace Hurma
 
         GLFWWindow(const WindowProps& props);
 
-        void OnUpdate() override;
+        void onUpdate() override;
 
-        uint32_t GetWidth() const override;
+        uint32_t getWidth() const override;
 
-        uint32_t GetHeight() const override;
+        uint32_t getHeight() const override;
 
-        void SetEventCallback(const EventCallbackFn& callback) override { mWindowData.callback = callback; }
+        void setEventCallback(const EventCallbackFn& callback) override { mWindowData.callback = callback; }
 
-        void SetVSync(bool enabled) override;
+        void setVSync(bool enabled) override;
 
-        bool IsVSync() const override;
+        bool isVSync() const override;
 
-        void* GetNativeWindow() const override;
+        void* getNativeWindow() const override;
 
      private:
 
         struct GLWindowData
         {
-            size_t width{};
-            size_t height{};
+            uint32_t width{};
+            uint32_t height{};
             EventCallbackFn callback{};
         } mWindowData;
 
         GLFWwindow* mWindow;
-
     };
 
 }

@@ -1,29 +1,29 @@
 #pragma once
 #include <stdint.h>
 #include <functional>
-#include "Hurma/Events/Event.h"
 
 namespace Hurma
 {
+    class Event;
 
     class IWindow
 	{
 	public:
-		using EventCallbackFn = std::function<void(const Event&)>;
+		using EventCallbackFn = std::function<void(Event&)>;
 
 		virtual ~IWindow() = default;
 
-		virtual void OnUpdate() = 0;
+		virtual void onUpdate() = 0;
 
-		virtual uint32_t GetWidth() const = 0;
-		virtual uint32_t GetHeight() const = 0;
+		virtual uint32_t getWidth() const = 0;
+		virtual uint32_t getHeight() const = 0;
 
 		// Window attributes
-		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
-		virtual void SetVSync(bool enabled) = 0;
-		virtual bool IsVSync() const = 0;
+		virtual void setEventCallback(const EventCallbackFn& callback) = 0;
+		virtual void setVSync(bool enabled) = 0;
+		virtual bool isVSync() const = 0;
 
-		virtual void* GetNativeWindow() const = 0;
+		virtual void* getNativeWindow() const = 0;
 	};
 
     struct WindowProps

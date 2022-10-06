@@ -41,6 +41,8 @@ namespace Hurma
 		{
 			return getCategoryFlags() & category;
 		}
+
+        bool handled {false};
     };
 
     #define DECLARE_EVENT_TYPE(type) static EventType getStaticType() { return EventType::type; }\
