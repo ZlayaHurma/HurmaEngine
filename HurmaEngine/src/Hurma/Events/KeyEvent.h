@@ -33,4 +33,32 @@ namespace Hurma
      private:
          bool mIsRepeated;
     };
+
+    class KeyReleasedEvent : public KeyEvent
+	{
+	public:
+		KeyReleasedEvent(int keycode)
+			: KeyEvent(keycode) {}
+
+		std::string toString() const override
+		{
+			return getName();
+		}
+
+		DECLARE_EVENT_TYPE(KeyReleased)
+	};
+
+	class KeyTypedEvent : public KeyEvent
+	{
+	public:
+		KeyTypedEvent(int keycode)
+			: KeyEvent(keycode) {}
+
+		std::string toString() const override
+		{
+			return getName();
+		}
+
+		DECLARE_EVENT_TYPE(KeyTyped)
+	};
 }

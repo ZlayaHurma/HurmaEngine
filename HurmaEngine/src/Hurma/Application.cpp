@@ -5,19 +5,27 @@
 #include "Events/Event.h"
 #include "LayersStack.h"
 #include "Layer.h"
+#include "glad/glad.h"
+#include "ImGui/ImGuiLayer.h"
 
 namespace Hurma
 {
 
-    #define HURMA_BIND_METHOD(x) std::bind(&Application::x, this, std::placeholders::_1)
+    Application* Application::sInstance = nullptr;
 
     Application::Application() 
-        : mWindow(std::make_unique<GLFWWindow>(WindowProps{100, 100, "Test"}))
+        : mWindow(std::make_unique<GLFWWindow>(WindowProps{1000, 1000, "Test"}))
         , mLayersStack(std::make_unique<LayersStack>())
     {
         Log::InitLogger(std::make_unique<SpdLogger>());
 
-        mWindow->setEventCallback(HURMA_BIND_METHOD(onEvent));
+        mWindow->setEventCallback(HURMA_BIND_METHOD(Application::onEvent));
+
+        _ASSERTE(!sInstance);
+        sInstance = this;
+
+        mImGuiLayer = new ImGuiLayer();
+        pushOverlay(mImGuiLayer);
     }
     
     Application::~Application() 
@@ -31,7 +39,23 @@ namespace Hurma
         
         while(true)
         {
+            glClearColor(1,1,1,1);
+            glClear(GL_COLOR_BUFFER_BIT);
+
+            for(Layer* layer : *mLayersStack)
+            {
+                layer->onUpdate();
+            }
+
+            for(Layer* layer : *mLayersStack)
+            {
+                mImGuiLayer->begin();
+                layer->onImGuiRender();
+                mImGuiLayer->end();
+            }
+
             mWindow->onUpdate();
+
         }
 
     }
@@ -55,7 +79,7 @@ namespace Hurma
         for( auto it = mLayersStack->end(); it != mLayersStack->begin(); )
         {
             (*--it)->onEvent(event);
-            if(event.handled)
+            if(event.isHandled())
                 break;
         }
     }

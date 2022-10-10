@@ -1,5 +1,6 @@
 #include "Hurma.h" 
 #include "Hurma/Log/Log.h"
+#include "Hurma/ImGui/ImGuiLayer.h"
 
 class GameApplication : public Hurma::Application
 {

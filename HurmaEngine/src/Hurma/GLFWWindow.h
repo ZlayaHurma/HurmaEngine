@@ -28,11 +28,12 @@ namespace Hurma
 
      private:
 
-        struct GLWindowData
+        struct GLFWWindowData
         {
             uint32_t width{};
             uint32_t height{};
             EventCallbackFn callback{};
+            bool isVSync{};
         } mWindowData;
 
         GLFWwindow* mWindow;

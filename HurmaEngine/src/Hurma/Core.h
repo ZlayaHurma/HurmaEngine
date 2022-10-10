@@ -12,3 +12,5 @@
 #else
     #error Currently Hurma only supports windows
 #endif
+
+#define HURMA_BIND_METHOD(x) std::bind(&x, this, std::placeholders::_1)

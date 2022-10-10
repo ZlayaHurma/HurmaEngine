@@ -12,6 +12,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 include "HurmaEngine/3dParty/GLFW"
 include "HurmaEngine/3dParty/GLAD"
+include "HurmaEngine/3dParty/ImGui"
 	
 project "HurmaEngine"
 	location "HurmaEngine"
@@ -25,7 +26,8 @@ project "HurmaEngine"
     links
 	{
 		"GLFW",
-        "GLAD"
+        "GLAD",
+		"ImGui"
 	}
 
 	files
@@ -40,6 +42,7 @@ project "HurmaEngine"
 		"%{prj.name}/3dparty/spdlog/include",
         "%{prj.name}/3dparty/GLFW/include",
 		"%{prj.name}/3dparty/GLAD/include",
+		"%{prj.name}/3dparty/ImGui",
 		"%{prj.name}/src"
 	} 
 	

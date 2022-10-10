@@ -28,6 +28,9 @@ namespace Hurma
 
     class Event 
     {
+
+        friend class EventDispatcher;
+
      protected:
         Event() = default;
 
@@ -42,6 +45,9 @@ namespace Hurma
 			return getCategoryFlags() & category;
 		}
 
+        bool isHandled() { return handled; }
+
+     private:
         bool handled {false};
     };
 
@@ -54,9 +60,9 @@ namespace Hurma
     template <class T>
     concept EventBased = std::derived_from<T, Event>;
 
-    class EventDispatcher{
+    class EventDispatcher {
      public:
-        EventDispatcher(const Event& event) 
+        EventDispatcher(Event& event) 
             : mEvent(event)
         {}
 
@@ -66,12 +72,12 @@ namespace Hurma
             if(EventType::getStaticType() != mEvent.getType())
                 return false;
 
-            eventFunc(dynamic_cast<const EventType&>(mEvent));
+            mEvent.handled |= eventFunc(dynamic_cast<EventType&>(mEvent));
             return true;
         }
 
       private:
-        const Event& mEvent;
+        Event& mEvent;
     };
 
 }

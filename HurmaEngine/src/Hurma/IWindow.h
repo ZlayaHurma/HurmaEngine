@@ -28,8 +28,8 @@ namespace Hurma
 
     struct WindowProps
     {
-        size_t windowWidth{};
-        size_t windowHeight{};
+        uint32_t windowWidth{};
+        uint32_t windowHeight{};
         std::string title{};
     };
 
