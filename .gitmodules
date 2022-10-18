@@ -11,3 +11,6 @@
 [submodule "HurmaEngine/3dParty/ImGui"]
 	path = HurmaEngine/3dParty/ImGui
 	url = https://github.com/TheCherno/imgui
+[submodule "HurmaEngine/3dParty/glm"]
+	path = HurmaEngine/3dParty/glm
+	url = https://github.com/g-truc/glm

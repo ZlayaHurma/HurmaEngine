@@ -1,5 +1,6 @@
 #pragma once
 #include "Core.h"
+
 #include <memory>
 
 namespace Hurma
@@ -9,6 +10,13 @@ namespace Hurma
     class IWindow;
     class LayersStack;
     class ImGuiLayer;
+
+    namespace Render
+    {
+        class IVertexBuffer;
+        class IVertexArray;
+        class IShader;
+    }
 
     class HURMA_API Application 
     {
@@ -36,6 +44,8 @@ namespace Hurma
          #pragma warning(pop)
 
          ImGuiLayer* mImGuiLayer;
+
+         double mLastUpdateTime {0.0};
 
          static Application* sInstance;
     };

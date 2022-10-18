@@ -7,6 +7,15 @@
 #include "Layer.h"
 #include "glad/glad.h"
 #include "ImGui/ImGuiLayer.h"
+#include "GLFW/glfw3.h"
+#include "Renderer/OpenGLVertexBuffer.h"
+#include "Renderer/IVertexBuffer.h"
+#include "Renderer/OpenGLIndexBuffer.h"
+#include "Renderer/OpenGLVertexArray.h"
+#include "Renderer/BufferLayout.h"
+#include "Renderer/OpenGLShader.h"
+#include "Renderer/RenderCommand.h"
+#include "Renderer/Renderer.h"
 
 namespace Hurma
 {
@@ -30,32 +39,33 @@ namespace Hurma
     
     Application::~Application() 
     {
-        
     }
 
     void Application::run() 
     {
+        using namespace Render;
+
         Log::logInfo("Hello!");
         
-        while(true)
+        while(!mWindow->shouldClose())
         {
-            glClearColor(1,1,1,1);
-            glClear(GL_COLOR_BUFFER_BIT);
+            const double currTime = glfwGetTime();
+            double updateDeltaTimeSec = currTime - mLastUpdateTime;
+            mLastUpdateTime = currTime;
 
             for(Layer* layer : *mLayersStack)
             {
-                layer->onUpdate();
+                layer->onUpdate(updateDeltaTimeSec);
             }
 
+            mImGuiLayer->begin();
             for(Layer* layer : *mLayersStack)
             {
-                mImGuiLayer->begin();
                 layer->onImGuiRender();
-                mImGuiLayer->end();
             }
+            mImGuiLayer->end();
 
             mWindow->onUpdate();
-
         }
 
     }

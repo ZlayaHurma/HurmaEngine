@@ -18,6 +18,8 @@ namespace Hurma
 		virtual uint32_t getWidth() const = 0;
 		virtual uint32_t getHeight() const = 0;
 
+        virtual bool shouldClose() const = 0;
+
 		// Window attributes
 		virtual void setEventCallback(const EventCallbackFn& callback) = 0;
 		virtual void setVSync(bool enabled) = 0;

@@ -1,27 +1,28 @@
 #pragma once
 #include "Event.h"
+#include "../KeyCode.h"
 
 namespace Hurma
 {
     class KeyEvent : public Event 
     {
      public:
-        KeyEvent(int keyCode) 
+        KeyEvent(KeyCode keyCode) 
             : mKeyCode(keyCode)
         {}
 
         DECLARE_EVENT_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
 
-        int getKeyCode() { return mKeyCode; }
+        KeyCode getKeyCode() { return mKeyCode; }
 
      private:
-         int mKeyCode;
+         KeyCode mKeyCode;
     };
 
     class KeyPressedEvent : public KeyEvent 
     {
      public:
-        KeyPressedEvent(int keyCode, bool isRepeated) 
+        KeyPressedEvent(KeyCode keyCode, bool isRepeated) 
         : KeyEvent(keyCode)
         , mIsRepeated(isRepeated)
         {}
@@ -37,8 +38,8 @@ namespace Hurma
     class KeyReleasedEvent : public KeyEvent
 	{
 	public:
-		KeyReleasedEvent(int keycode)
-			: KeyEvent(keycode) {}
+		KeyReleasedEvent(KeyCode keyCode)
+			: KeyEvent(keyCode) {}
 
 		std::string toString() const override
 		{
@@ -51,8 +52,8 @@ namespace Hurma
 	class KeyTypedEvent : public KeyEvent
 	{
 	public:
-		KeyTypedEvent(int keycode)
-			: KeyEvent(keycode) {}
+		KeyTypedEvent(KeyCode keyCode)
+			: KeyEvent(keyCode) {}
 
 		std::string toString() const override
 		{

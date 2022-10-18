@@ -26,7 +26,9 @@ namespace Hurma
 
         void* getNativeWindow() const override;
 
-     private:
+        bool shouldClose() const override;
+
+       private:
 
         struct GLFWWindowData
         {

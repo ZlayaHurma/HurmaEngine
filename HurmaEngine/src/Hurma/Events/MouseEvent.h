@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "Event.h"
+#include "../MouseCode.h"
 
 namespace Hurma
 {
@@ -49,21 +50,21 @@ namespace Hurma
 	class MouseButtonEvent : public Event
 	{
 	public:
-		int getMouseButton() const { return mButton; }
+		MouseCode getMouseButton() const { return mButton; }
 
 		DECLARE_EVENT_CATEGORY(EventCategoryMouse | EventCategoryInput | EventCategoryMouseButton)
 
 	protected:
-		MouseButtonEvent(int button)
+		MouseButtonEvent(MouseCode button)
 			: mButton(button) {}
 
-		int mButton;
+		MouseCode mButton;
 	};
 
 	class MouseButtonPressedEvent : public MouseButtonEvent
 	{
 	public:
-		MouseButtonPressedEvent(int button)
+		MouseButtonPressedEvent(MouseCode button)
 			: MouseButtonEvent(button) {}
 
 		std::string toString() const override
@@ -77,7 +78,7 @@ namespace Hurma
 	class MouseButtonReleasedEvent : public MouseButtonEvent
 	{
 	public:
-		MouseButtonReleasedEvent(int button)
+		MouseButtonReleasedEvent(MouseCode button)
 			: MouseButtonEvent(button) {}
 
 		std::string toString() const override

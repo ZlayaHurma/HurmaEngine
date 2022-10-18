@@ -4,9 +4,40 @@
 #include "GLFW/glfw3.h"
 #include "Events/ApplicationEvent.h"
 #include "Events/MouseEvent.h"
+#include "MouseCode.h"
 
 namespace Hurma
 {
+
+    KeyCode GLWFKeyCodeToHurmaKeyCode(int glwfKeyCode)
+    {
+        switch(glwfKeyCode)
+        { 
+            case GLFW_KEY_LEFT:
+                return KeyCode::Left;
+            case GLFW_KEY_RIGHT:
+                return KeyCode::Right;
+            case GLFW_KEY_UP:
+                return KeyCode::Up;
+            case GLFW_KEY_DOWN:
+                return KeyCode::Down;
+        }
+
+        return KeyCode::Undefined;
+    }
+
+    MouseCode GLWFMouseToHurmaMouse(int glwfMouseCode)
+    {
+        switch(glwfMouseCode)
+        { 
+            case GLFW_MOUSE_BUTTON_1:
+                return MouseCode::Left;
+            case GLFW_MOUSE_BUTTON_2:
+                return MouseCode::Right;
+        }
+
+        return MouseCode::Undefined;
+    }
 
     GLFWWindow::GLFWWindow(const WindowProps& props) 
     {
@@ -50,19 +81,19 @@ namespace Hurma
 			{
 				case GLFW_PRESS:
 				{
-					KeyPressedEvent event(key, 0);
+					KeyPressedEvent event(GLWFKeyCodeToHurmaKeyCode(key), 0);
 					data->callback(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
-					KeyReleasedEvent event(key);
+					KeyReleasedEvent event(GLWFKeyCodeToHurmaKeyCode(key));
 					data->callback(event);
 					break;
 				}
 				case GLFW_REPEAT:
 				{
-					KeyPressedEvent event(key, true);
+					KeyPressedEvent event(GLWFKeyCodeToHurmaKeyCode(key), true);
 					data->callback(event);
 					break;
 				}
@@ -73,7 +104,7 @@ namespace Hurma
 		{
 			GLFWWindowData* data = reinterpret_cast<GLFWWindowData*>(glfwGetWindowUserPointer(window));
 
-			KeyTypedEvent event(keycode);
+			KeyTypedEvent event(GLWFKeyCodeToHurmaKeyCode(keycode));
 			data->callback(event);
 		});
 
@@ -85,13 +116,13 @@ namespace Hurma
 			{
 				case GLFW_PRESS:
 				{
-					MouseButtonPressedEvent event(button);
+					MouseButtonPressedEvent event(GLWFMouseToHurmaMouse(button));
 					data->callback(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
-					MouseButtonReleasedEvent event(button);
+					MouseButtonReleasedEvent event(GLWFMouseToHurmaMouse(button));
 					data->callback(event);
 					break;
 				}
@@ -147,6 +178,11 @@ namespace Hurma
     void* GLFWWindow::getNativeWindow() const 
     {
         return mWindow;
+    }
+
+    bool GLFWWindow::shouldClose() const 
+    {
+        return glfwWindowShouldClose(mWindow);
     }
 
 }

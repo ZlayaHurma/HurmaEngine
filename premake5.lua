@@ -43,6 +43,7 @@ project "HurmaEngine"
         "%{prj.name}/3dparty/GLFW/include",
 		"%{prj.name}/3dparty/GLAD/include",
 		"%{prj.name}/3dparty/ImGui",
+		"%{prj.name}/3dparty/glm",
 		"%{prj.name}/src"
 	} 
 	
@@ -95,7 +96,8 @@ project "HurmaGame"
 	
 	includedirs
 	{
-		"HurmaEngine/src"
+		"HurmaEngine/src",
+		"HurmaEngine/3dparty/glm"
 	} 
 
 	

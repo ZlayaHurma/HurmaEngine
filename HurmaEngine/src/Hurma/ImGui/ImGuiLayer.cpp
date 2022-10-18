@@ -43,7 +43,7 @@ namespace Hurma
 		ImGui::DestroyContext();
     }
     
-    void ImGuiLayer::onUpdate() 
+    void ImGuiLayer::onUpdate(double deltaTimeSec) 
     {
     }
 
@@ -81,50 +81,6 @@ namespace Hurma
 		    ImGui::RenderPlatformWindowsDefault();
 		    glfwMakeContextCurrent(backup_current_context);
         }
-    }
-
-    bool ImGuiLayer::onMouseButtonPressedEvent(MouseButtonPressedEvent& e) 
-    {
-        ImGuiIO& io = ImGui::GetIO();
-        io.MouseDown[e.getMouseButton()] = true;
-
-        return false;
-    }
-
-    bool ImGuiLayer::onMouseMoveEvent(MouseMovedEvent& e) 
-    {
-        ImGuiIO& io = ImGui::GetIO();
-        io.MousePos = ImVec2(e.getX(), e.getY());
-
-        return false;
-    }
-
-    bool ImGuiLayer::onMouseButtonReleasedEvent(MouseButtonReleasedEvent& e)
-    {
-        ImGuiIO& io = ImGui::GetIO();
-        io.MouseDown[e.getMouseButton()] = false;
-
-        return false;
-    }
-
-    bool ImGuiLayer::onMouseScrolledEvent(MouseScrolledEvent& e)
-    {
-        return false;
-    }
-
-    bool ImGuiLayer::onKeyPressedEvent(KeyPressedEvent& e)
-    {
-        return false;
-    }
-
-    bool ImGuiLayer::onKeyReleasedEvent(KeyReleasedEvent& e)
-    {
-        return false;
-    }
-
-    bool ImGuiLayer::onWindowResizeEvent(WindowResizeEvent& e)
-    {
-        return false;
     }
 
 }
