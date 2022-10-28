@@ -6,7 +6,13 @@
 namespace Hurma
 {
 
-    struct Camera 
+    enum class CameraProjType 
+    {
+        Projection,
+        Ortho
+    };
+
+    class Camera 
     {
 
     public:
@@ -19,6 +25,9 @@ namespace Hurma
         {
             recomputeViewMatrix();
         }
+
+        virtual CameraProjType getProjType() const = 0;
+        virtual void setAspectRatio(float aspectRatio) = 0;
     
         inline const glm::mat4& getProjMatrix() const { return mProjMatrix; }
         inline const glm::mat4& getViewMatrix() const { return mViewMatrix; }
@@ -33,11 +42,17 @@ namespace Hurma
             mCenter += worldVec;
             recomputeViewMatrix();
         }
+
+        void rotateCamera(const glm::vec3& vec)
+        {
+            mEye += vec;
+            recomputeViewMatrix();
+        }
     
     private:
         void recomputeViewMatrix() { mViewMatrix = glm::lookAt(mEye, mCenter, mUp); } 
     
-    private:
+    protected:
         #pragma warning(push)
         #pragma warning(disable:4251)
         glm::mat4 mProjMatrix;

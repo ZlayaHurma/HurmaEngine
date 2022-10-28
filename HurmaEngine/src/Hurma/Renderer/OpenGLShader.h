@@ -10,14 +10,17 @@ namespace Render
     {
     public:
         OpenGLShader(const std::string& vertexsSrc, const std::string& fragmentSrc);
+
+        void init(const std::string& vertexsSrc, const std::string& fragmentSrc) override;
         virtual ~OpenGLShader();
 
         void bind() const override;
         void unbind() const override;
 
         bool uploadUniformMat4(const glm::mat4& matrix, const std::string& name) override;
+	    bool uploadUniformInt(int uniformInt, const std::string& name) override;
 
-    private:
+       private:
         uint32_t mProgram;
     };
 }

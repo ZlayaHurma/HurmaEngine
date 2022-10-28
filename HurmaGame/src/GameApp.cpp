@@ -2,19 +2,19 @@
 #include "Hurma/Log/Log.h"
 #include "Hurma/ImGui/ImGuiLayer.h"
 #include "Hurma/Layer.h"
-#include "Hurma/Renderer/RenderCommand.h"
 #include "Hurma/Renderer/Renderer.h"
-#include "Hurma/Renderer/OpenGLVertexBuffer.h"
 #include "Hurma/Renderer/IIndexBuffer.h"
-#include "Hurma/Renderer/OpenGLIndexBuffer.h"
-#include "Hurma/Renderer/OpenGLVertexArray.h"
-#include "Hurma/Renderer/OpenGLShader.h"
 #include "glm/matrix.hpp"
 #include "Hurma/Camera/Camera.h"
 #include "Hurma/Camera/OrthoCamera.h"
 #include "Hurma/Events/Event.h"
 #include "Hurma/Events/KeyEvent.h"
 #include "Hurma/Input.h"
+#include "Hurma/Events/ApplicationEvent.h"
+#include "Hurma/Renderer/BufferLayout.h"
+#include "Hurma/Renderer/IVertexArray.h"
+#include "Hurma/Renderer/IShader.h"
+#include "Hurma/Renderer/ITexture.h"
 
 class GameLayer : public Hurma::Layer
 {
@@ -25,46 +25,47 @@ public:
   {
       using namespace Hurma;
 
-      float triVertices[3 * 7] = {
-         -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-          0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-          0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f
+      float triVertices[3 * 5] = {
+         -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+          0.5f, -0.5f, 0.0f, 0.0f, 1.f,
+          0.0f,  0.5f, 0.0f, 1.f,  1.f,
         };
         std::shared_ptr<Render::IVertexBuffer> triVertexBuffer = 
-            std::make_shared<Render::OpenGLVertexBuffer>(triVertices, static_cast<uint32_t>(sizeof(triVertices)));
+            Render::Renderer::createVertexBuffer(triVertices, static_cast<uint32_t>(sizeof(triVertices)));
 
         triVertexBuffer->setLayout(Render::BufferLayout({
             {ShaderDataType::Float3, "position"}, 
-            {ShaderDataType::Float4, "color"}
+            {ShaderDataType::Float2, "textureCoords"}
         }));
         
         unsigned int triIndices[3] = { 0, 1, 2 };
         std::shared_ptr<Render::IIndexBuffer> triIndexBuffer = 
-            std::make_shared<Render::OpenGLIndexBuffer>(triIndices, static_cast<uint32_t>(sizeof(triIndices)));
+            Render::Renderer::createIndexBuffer(triIndices, static_cast<uint32_t>(sizeof(triIndices)));
         
-        mTriangleVertexArray = std::make_shared<Render::OpenGLVertexArray>();
+        mTriangleVertexArray = Render::Renderer::createVertexArray();
         mTriangleVertexArray->addVertexBuffer(triVertexBuffer);
         mTriangleVertexArray->setIndexBuffer(triIndexBuffer);
 
-        float rectVertices[4 * 7] = {
-         -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-         -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-          0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-          0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+        float rectVertices[5 * 5] = {
+         -0.5f, -0.5f, 0.0f, 0.f, 0.f,
+         -0.5f,  0.5f, 0.0f, 0.f, 1.f,
+          0.1f,  0.1f, 0.0f, 1.f, 1.f,
+          0.5f, -0.5f, 0.0f, 1.f, 0.f,
+         -1.f,   0.f,  0.0f, 0.5, 0.5
         };
         std::shared_ptr<Render::IVertexBuffer> rectVertexBuffer = 
-            std::make_shared<Render::OpenGLVertexBuffer>(rectVertices, static_cast<uint32_t>(sizeof(rectVertices)));
+            Render::Renderer::createVertexBuffer(rectVertices, static_cast<uint32_t>(sizeof(rectVertices)));
 
         rectVertexBuffer->setLayout(Render::BufferLayout({
             {ShaderDataType::Float3, "position"}, 
-            {ShaderDataType::Float4, "color"}
+            {ShaderDataType::Float2, "textureCoords"}
         }));
         
-        unsigned int rectIndices[6] = { 0, 1, 2, 0, 2, 3 };
+        unsigned int rectIndices[9] = { 0, 1, 2, 0, 2, 3, 0, 1, 4};
         std::shared_ptr<Render::IIndexBuffer> rectIndexBuffer = 
-            std::make_shared<Render::OpenGLIndexBuffer>(rectIndices, static_cast<uint32_t>(sizeof(rectIndices)));
+            Render::Renderer::createIndexBuffer(rectIndices, static_cast<uint32_t>(sizeof(rectIndices)));
         
-        mRectVertexArray = std::make_shared<Render::OpenGLVertexArray>();
+        mRectVertexArray = Render::Renderer::createVertexArray();
         mRectVertexArray->addVertexBuffer(rectVertexBuffer);
         mRectVertexArray->setIndexBuffer(rectIndexBuffer);
 
@@ -72,18 +73,16 @@ public:
             #version 330 core
 
             layout(location = 0) in vec3 aPosition;
-            layout(location = 1) in vec4 aColor;
+            layout(location = 1) in vec2 aTextureCoords;
 
             uniform mat4 uProjMatrix;
             uniform mat4 uViewMatrix;
 
-            out vec3 vPosition;
-            out vec4 vColor;
+            out vec2 vTextureCoords;
 
             void main(){
                 gl_Position = uProjMatrix * uViewMatrix * vec4(aPosition, 1.0);
-                vPosition = aPosition;
-                vColor = aColor;
+                vTextureCoords = aTextureCoords;
             }
         )";
 
@@ -92,18 +91,23 @@ public:
 
             layout(location = 0) out vec4 color;
 
-            in vec3 vPosition;
-            in vec4 vColor;
+            in vec2 vTextureCoords;
+
+            uniform sampler2D uTexture;
 
             void main(){
-              color = vColor;
+              color = texture(uTexture, vTextureCoords);
             }
         )";
 
-        mTriangleShader = std::make_unique<Render::OpenGLShader>(vert, frag);
-        mRectShader = std::make_unique<Render::OpenGLShader>(vert, frag);
+        mTriangleShader = Render::Renderer::createShader(vert, frag);
+        mRectShader = Render::Renderer::createShader(vert, frag);
+        mRectShader->uploadUniformInt(0, "uTexture");
 
-        mCamera = std::make_shared<Hurma::OrthoCamera>(-2.f, 2.f, -2.f, 2.f, glm::vec3{0.f,0.f,1.f}, glm::vec3{0.f,0.f,0.f}, glm::vec3{0.f,1.f,0.f});
+        mTexture = Render::Renderer::createTexture("D:\\CPP Projects\\HurmaEngine\\HurmaGame\\src\\sm.png");
+        mTexture2 = Render::Renderer::createTexture("D:\\CPP Projects\\HurmaEngine\\HurmaGame\\src\\car.png");
+        
+        mCamera = std::make_shared<Hurma::OrthoCamera>(-1.f, 1.f, -1.f, 1.f, 0.f, 9999.f, glm::vec3{0.f,0.f,1.f}, glm::vec3{0.f,0.f,0.f}, glm::vec3{0.f,1.f,0.f});
   }
 
   void onDetach() override 
@@ -126,17 +130,20 @@ public:
       if(Hurma::Input::isKeyPressed(Hurma::KeyCode::Down))
           mCamera->moveCamera({0, -cameraOffset, 0});
       
-      RenderCommand::setClearColor({0.1f, 0.1f, 0.1f, 1});
-      RenderCommand::clear();
+      Renderer::setClearColor({0.1f, 0.1f, 0.1f, 1});
+      Renderer::clear();
       
       Renderer::beginScene(mCamera);
       {
+          mTexture->bind();
           Renderer::submit(mRectShader, mRectVertexArray);
-          Renderer::submit(mTriangleShader, mTriangleVertexArray);
+          // 
+          //mTexture2->bind();
+          //Renderer::submit(mRectShader, mTriangleVertexArray);
+
+          Renderer::draw2DQuad({1.f,1.f}, 0.5f, glm::pi<float>() * 0.25, mTexture2);
       }
       Renderer::endScene();
-
-      mLastDeltaTimeSec = deltaTimeSec;
   }
 
   void onEvent(Hurma::Event& event) override 
@@ -145,7 +152,7 @@ public:
       dispatcher.dispatch<Hurma::KeyPressedEvent>([this](Hurma::KeyPressedEvent& event){
 
           const static double cameraSpeed = 50.0;
-          double cameraOffset = cameraSpeed * mLastDeltaTimeSec; 
+          double cameraOffset = cameraSpeed /** mLastDeltaTimeSec*/; 
 
           switch(event.getKeyCode()) 
           {
@@ -168,6 +175,10 @@ public:
 
           return false;
       });
+      dispatcher.dispatch<Hurma::WindowResizeEvent>([this](Hurma::WindowResizeEvent& event){
+          mCamera->setAspectRatio(static_cast<float>(event.getWidth()) / static_cast<float>(event.getHeight()));
+          return false;
+      });
   }
 
   void onImGuiRender() override 
@@ -181,7 +192,8 @@ private:
     std::shared_ptr<Hurma::Render::IShader> mRectShader;
     std::shared_ptr<Hurma::Camera> mCamera;
 
-    double mLastDeltaTimeSec {0};
+    std::shared_ptr<Hurma::ITexture> mTexture;
+    std::shared_ptr<Hurma::ITexture> mTexture2;
 };
 
 class GameApplication : public Hurma::Application

@@ -13,6 +13,11 @@ namespace Render
     OpenGLShader::OpenGLShader(const std::string& vertexsSrc, const std::string& fragmentSrc) 
         : mProgram(0)
     {
+        init(vertexsSrc, fragmentSrc);
+    }
+
+    void OpenGLShader::init(const std::string& vertexsSrc, const std::string& fragmentSrc)
+    {
         GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
         // Send the vertex shader source code to GL
@@ -144,6 +149,16 @@ namespace Render
             return false;
 
         glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+        return true;
+    }
+
+    bool OpenGLShader::uploadUniformInt(int uniformInt, const std::string& name) 
+    {
+        GLint location = glGetUniformLocation(mProgram, name.c_str());
+        if(location == -1)
+            return false;
+
+        glUniform1i(location, uniformInt);
         return true;
     }
 

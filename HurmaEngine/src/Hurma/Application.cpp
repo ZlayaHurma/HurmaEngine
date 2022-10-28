@@ -14,8 +14,8 @@
 #include "Renderer/OpenGLVertexArray.h"
 #include "Renderer/BufferLayout.h"
 #include "Renderer/OpenGLShader.h"
-#include "Renderer/RenderCommand.h"
 #include "Renderer/Renderer.h"
+#include "Events/ApplicationEvent.h"
 
 namespace Hurma
 {
@@ -27,6 +27,7 @@ namespace Hurma
         , mLayersStack(std::make_unique<LayersStack>())
     {
         Log::InitLogger(std::make_unique<SpdLogger>());
+        Render::Renderer::init();
 
         mWindow->setEventCallback(HURMA_BIND_METHOD(Application::onEvent));
 
@@ -85,6 +86,7 @@ namespace Hurma
     void Application::onEvent(Event& event) 
     {
         EventDispatcher dispatcher(event);
+        dispatcher.dispatch<WindowResizeEvent>(HURMA_BIND_METHOD(Application::onWindowResizeEvent));
 
         for( auto it = mLayersStack->end(); it != mLayersStack->begin(); )
         {
@@ -92,6 +94,12 @@ namespace Hurma
             if(event.isHandled())
                 break;
         }
+    }
+
+    bool Application::onWindowResizeEvent(WindowResizeEvent& resizeEvent) 
+    {
+        Render::Renderer::onWindowResize(resizeEvent.getWidth(), resizeEvent.getHeight());
+        return false;
     }
 
 };

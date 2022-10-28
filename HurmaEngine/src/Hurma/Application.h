@@ -10,6 +10,7 @@ namespace Hurma
     class IWindow;
     class LayersStack;
     class ImGuiLayer;
+    class WindowResizeEvent;
 
     namespace Render
     {
@@ -35,8 +36,9 @@ namespace Hurma
 
      private:
          void onEvent(Event& event);
+	     bool onWindowResizeEvent(WindowResizeEvent& resizeEvent);
 
-     private:
+    private:
          #pragma warning(push)
          #pragma warning(disable:4251)
          std::unique_ptr<IWindow> mWindow;
