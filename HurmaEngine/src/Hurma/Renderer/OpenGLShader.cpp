@@ -151,6 +151,7 @@ namespace Render
         if(location == -1)
             return false;
 
+        glUseProgram(mProgram);
         glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
         return true;
     }
@@ -161,6 +162,7 @@ namespace Render
         if(location == -1)
             return false;
 
+        glUseProgram(mProgram);
         glUniform4f(location, vec[0], vec[1], vec[2], vec[3]);
         return true;
     }
@@ -172,13 +174,8 @@ namespace Render
         if(location == -1)
             return false;
          
-        auto a= glGetError();
-            a++;
+        glUseProgram(mProgram);
         glUniform1i(location, uniformInt);
-        auto d = glGetError();
-            d++;
-            d--;
-            d = glGetError();
         return true;
     }
 

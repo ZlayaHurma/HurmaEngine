@@ -19,18 +19,22 @@ namespace Hurma
         float quadsLifetimeSec {};
         float dispersalSpeed {};
         float rotationSpeedRadSec {};
+        glm::vec4 groupColor {};
     };
 
-    class HURMA_API QuadsPartivleSystem2D
+    class HURMA_API QuadsParticleSystem2D
     {
     public:
-        QuadsPartivleSystem2D(std::unique_ptr<IParticle2DLinearDirectionProvider> directionProvider);
-        ~QuadsPartivleSystem2D();
+        QuadsParticleSystem2D(std::unique_ptr<IParticle2DLinearDirectionProvider> directionProvider);
+        ~QuadsParticleSystem2D();
 
         void update(double deltaTimeMs);
         void render() const;
 
         void applyAtPoint(const glm::vec2& point, const ParticlesTraits& traits);
+
+    private:
+        void clearDeadParticles();
 
     private:
         std::vector<ParticleQuad> mParticleQuads;

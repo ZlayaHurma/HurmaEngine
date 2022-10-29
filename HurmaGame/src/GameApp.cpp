@@ -16,7 +16,7 @@
 #include "Hurma/Renderer/IShader.h"
 #include "Hurma/Renderer/ITexture.h"
 #include "glad/glad.h"
-#include "Hurma/Particles/QuadParticlesSystem/QuadsPartivleSystem2D.h"
+#include "Hurma/Particles/QuadParticlesSystem/QuadsParticleSystem2D.h"
 #include "Hurma/Particles/QuadParticlesSystem/RandomizedParticleDirectionProvider.h"
 #include "Hurma/IWindow.h"
 
@@ -29,27 +29,27 @@ public:
   {
       using namespace Hurma;
 
-      mTriangleVertexArray = Render::Renderer::createVertexArray();
-
-      float triVertices[3 * 5] = {
-         -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-          0.5f, -0.5f, 0.0f, 0.0f, 1.f,
-          0.0f,  0.5f, 0.0f, 1.f,  1.f,
-        };
-        std::shared_ptr<Render::IVertexBuffer> triVertexBuffer = 
-            Render::Renderer::createVertexBuffer(triVertices, static_cast<uint32_t>(sizeof(triVertices)));
-
-        triVertexBuffer->setLayout(Render::BufferLayout({
-            {ShaderDataType::Float3, "position"}, 
-            {ShaderDataType::Float2, "textureCoords"}
-        }));
-        
-        unsigned int triIndices[3] = { 0, 1, 2 };
-        std::shared_ptr<Render::IIndexBuffer> triIndexBuffer = 
-            Render::Renderer::createIndexBuffer(triIndices, static_cast<uint32_t>(sizeof(triIndices)));
-        
-        mTriangleVertexArray->addVertexBuffer(triVertexBuffer);
-        mTriangleVertexArray->setIndexBuffer(triIndexBuffer);
+//       mTriangleVertexArray = Render::Renderer::createVertexArray();
+// 
+//       float triVertices[3 * 5] = {
+//          -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+//           0.5f, -0.5f, 0.0f, 0.0f, 1.f,
+//           0.0f,  0.5f, 0.0f, 1.f,  1.f,
+//         };
+//         std::shared_ptr<Render::IVertexBuffer> triVertexBuffer = 
+//             Render::Renderer::createVertexBuffer(triVertices, static_cast<uint32_t>(sizeof(triVertices)));
+// 
+//         triVertexBuffer->setLayout(Render::BufferLayout({
+//             {ShaderDataType::Float3, "position"}, 
+//             {ShaderDataType::Float2, "textureCoords"}
+//         }));
+//         
+//         unsigned int triIndices[3] = { 0, 1, 2 };
+//         std::shared_ptr<Render::IIndexBuffer> triIndexBuffer = 
+//             Render::Renderer::createIndexBuffer(triIndices, static_cast<uint32_t>(sizeof(triIndices)));
+//         
+//         mTriangleVertexArray->addVertexBuffer(triVertexBuffer);
+//         mTriangleVertexArray->setIndexBuffer(triIndexBuffer);
 
         mRectVertexArray = Render::Renderer::createVertexArray();
 
@@ -114,7 +114,7 @@ public:
         mTexture2 = Render::Renderer::createTexture("D:\\CPP Projects\\HurmaEngine\\HurmaGame\\src\\car.png");
         
         mCamera = std::make_shared<Hurma::OrthoCamera>(-1.f, 1.f, -1.f, 1.f, 0.f, 9999.f, glm::vec3{0.f,0.f,1.f}, glm::vec3{0.f,0.f,0.f}, glm::vec3{0.f,1.f,0.f});
-        mParticleSystem = std::make_unique<Hurma::QuadsPartivleSystem2D>(std::make_unique<Hurma::RandomizedParticleDirectionProvider>(3));
+        mParticleSystem = std::make_unique<Hurma::QuadsParticleSystem2D>(std::make_unique<Hurma::RandomizedParticleDirectionProvider>(1));
   }
 
   void onDetach() override 
@@ -145,7 +145,7 @@ public:
           mousePos[1] /= Hurma::Application::get().getWindow()->getHeight();
           std::swap(mousePos[0], mousePos[1]);
           mousePos[1] *= -1;
-          mParticleSystem->applyAtPoint(mousePos, Hurma::ParticlesTraits{3, 0.1, 2, 0.1, 1.5});
+          mParticleSystem->applyAtPoint(mousePos, Hurma::ParticlesTraits{1, 0.1, 2, 0.1, 1.5, {0.5,0.5,0,1}});
       }
       
       Renderer::setClearColor({0.1f, 0.1f, 0.1f, 1});
@@ -153,8 +153,9 @@ public:
       
       Renderer::beginScene(mCamera);
       {
-          Renderer::draw2DQuad({ 1.f,1.f }, 0.5f, glm::pi<float>() * 0.25f, glm::vec4(1, 0, 0, 1));
+          Renderer::draw2DQuad({ 1.f,1.f }, 0.5f, glm::pi<float>() * 0.25f, mTexture2);
 
+          mTexture->bind();
           Renderer::submit(mTriangleShader, mRectVertexArray);
           // 
           //mTexture2->bind();
@@ -214,7 +215,7 @@ private:
     std::shared_ptr<Hurma::Render::IShader> mTriangleShader;
     std::shared_ptr<Hurma::Render::IShader> mRectShader;
     std::shared_ptr<Hurma::Camera> mCamera;
-    std::shared_ptr<Hurma::QuadsPartivleSystem2D> mParticleSystem;
+    std::shared_ptr<Hurma::QuadsParticleSystem2D> mParticleSystem;
 
     std::shared_ptr<Hurma::ITexture> mTexture;
     std::shared_ptr<Hurma::ITexture> mTexture2;

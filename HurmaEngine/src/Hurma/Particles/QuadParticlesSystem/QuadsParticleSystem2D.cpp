@@ -1,40 +1,51 @@
 #include <memory>
-#include "QuadsPartivleSystem2D.h"
+#include "QuadsParticleSystem2D.h"
 #include "Hurma/Renderer/Renderer.h"
 #include "IParticle2DLinearDirectionProvider.h"
 
 namespace Hurma
 {
 
-    QuadsPartivleSystem2D::QuadsPartivleSystem2D(std::unique_ptr<IParticle2DLinearDirectionProvider> directionProvider)
+    QuadsParticleSystem2D::QuadsParticleSystem2D(std::unique_ptr<IParticle2DLinearDirectionProvider> directionProvider)
         : mDirectionProvider(std::move(directionProvider))
-    {
-    }
+    {}
 
-    QuadsPartivleSystem2D::~QuadsPartivleSystem2D()
-    {
-    }
+    QuadsParticleSystem2D::~QuadsParticleSystem2D()
+    {}
 
-    void QuadsPartivleSystem2D::update(double deltaTimeSec)
+    void QuadsParticleSystem2D::update(double deltaTimeSec)
     {
         for (ParticleQuad& quad : mParticleQuads)
         {
             quad.update(deltaTimeSec);
         }
+
+        clearDeadParticles();
     }
 
-    void QuadsPartivleSystem2D::render() const
+    void QuadsParticleSystem2D::clearDeadParticles()
+    {
+        std::vector<ParticleQuad> aliveParticles;
+        for (const ParticleQuad& quad : mParticleQuads)
+        {
+            if(quad.isAlive())
+                aliveParticles.push_back(quad);
+        }
+
+        std::swap(aliveParticles, mParticleQuads);
+    }
+
+    void QuadsParticleSystem2D::render() const
     {
         for (const ParticleQuad& quad : mParticleQuads)
         {
-            Render::Renderer::draw2DQuad(quad.getPosition(), quad.getSize(), quad.getRotation(), {1,0,0,1});
+            Render::Renderer::draw2DQuad(quad.getPosition(), quad.getSize(), quad.getRotation(), quad.getColor());
         }
     }
 
-    void QuadsPartivleSystem2D::applyAtPoint(const glm::vec2& point, const ParticlesTraits& traits)
+    void QuadsParticleSystem2D::applyAtPoint(const glm::vec2& point, const ParticlesTraits& traits)
     {
         // Spawn group
-
         for (size_t groupInd = 0; groupInd < traits.quadsSpawnNum; groupInd++)
         {
             auto quadFlyDirection = mDirectionProvider->getDirection(groupInd);
@@ -49,7 +60,8 @@ namespace Hurma
                     traits.rotationSpeedRadSec,
                     quadFlyDirection,
                     // TODO: provider for initial rotation
-                    0.f
+                    0.f,
+                    traits.groupColor
                 });
         }
     }

@@ -161,6 +161,7 @@ namespace Render
 
         auto transformMatrix = scaledMatrix;
 
+        QUAD_COLOR_SHADER->bind();
         QUAD_COLOR_SHADER->uploadUniformMat4(transformMatrix, "uTransformMatrix");
         QUAD_COLOR_SHADER->uploadUniformVec4(color, "uColor");
 
@@ -174,7 +175,8 @@ namespace Render
         auto scaledMatrix = glm::scale(rotatedMatrix, glm::vec3(sideLength, sideLength, 1.f));
 
         auto transformMatrix = scaledMatrix;
-
+        
+        QUAD_TEXTURE_SHADER->bind();
         QUAD_TEXTURE_SHADER->uploadUniformMat4(transformMatrix, "uTransformMatrix");
 
         const static int textureSlot = 0;
