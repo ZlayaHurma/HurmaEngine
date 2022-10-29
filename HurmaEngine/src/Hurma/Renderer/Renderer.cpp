@@ -20,7 +20,8 @@ namespace Render
     ///////////////////////////////////////////////////////////////
 
     static std::shared_ptr<IVertexArray> QUAD_VERTEX_ARRAY {};
-    static std::shared_ptr<IShader> QUAD_SHADER {};
+    static std::shared_ptr<IShader> QUAD_TEXTURE_SHADER {};
+    static std::shared_ptr<IShader> QUAD_COLOR_SHADER {};
 
     ///////////////////////////////////////////////////////////////
 
@@ -49,7 +50,6 @@ namespace Render
         std::shared_ptr<IIndexBuffer> quadIndexBuffer = Renderer::createIndexBuffer(indices, sizeof(indices));
         QUAD_VERTEX_ARRAY->addVertexBuffer(quadVertexBuffer);
         QUAD_VERTEX_ARRAY->setIndexBuffer(quadIndexBuffer);
-        QUAD_VERTEX_ARRAY->unbind();
 
         std::string vert = R"(
             #version 330 core
@@ -83,7 +83,21 @@ namespace Render
             }
         )";
 
-        QUAD_SHADER = Renderer::createShader(vert, textureFragShader);
+        std::string colorFragShader = R"(
+            #version 330 core
+
+            layout(location = 0) out vec4 color;
+
+
+            uniform vec4 uColor;
+
+            void main(){
+              color = uColor;
+            }
+        )";
+
+        QUAD_TEXTURE_SHADER = Renderer::createShader(vert, textureFragShader);
+        QUAD_COLOR_SHADER   = Renderer::createShader(vert,   colorFragShader);
     }
 
     void Renderer::init() 
@@ -116,7 +130,6 @@ namespace Render
         if(!shader->uploadUniformMat4(mCamera->getProjMatrix(), "uProjMatrix"))
             Log::logWarn("uProjMatrix uniform was no passed into the vertex shader. Camera disabled");
 
-        vertexArray->bind();
         drawIndexed(vertexArray);
     }
 
@@ -142,7 +155,16 @@ namespace Render
 
     void Renderer::draw2DQuad(const glm::vec2& worldPosition, float sideLength, float angleRad, const glm::vec4& color)
     {
+        auto translatedMatrix = glm::translate(glm::mat4(1.f), { worldPosition, 0.0f } );
+        auto rotatedMatrix = glm::rotate(translatedMatrix, angleRad, glm::vec3(0.f, 0.f, 1.f));
+        auto scaledMatrix = glm::scale(rotatedMatrix, glm::vec3(sideLength, sideLength, 1.f));
 
+        auto transformMatrix = scaledMatrix;
+
+        QUAD_COLOR_SHADER->uploadUniformMat4(transformMatrix, "uTransformMatrix");
+        QUAD_COLOR_SHADER->uploadUniformVec4(color, "uColor");
+
+        submit(QUAD_COLOR_SHADER, QUAD_VERTEX_ARRAY);
     }
 
     void Renderer::draw2DQuad(const glm::vec2& worldPosition, float sideLength, float angleRad, std::shared_ptr<ITexture> texture)
@@ -153,15 +175,13 @@ namespace Render
 
         auto transformMatrix = scaledMatrix;
 
-        QUAD_SHADER->uploadUniformMat4(transformMatrix, "uTransformMatrix");
-        QUAD_SHADER->uploadUniformMat4(mCamera->getViewMatrix(), "uViewMatrix");
-        QUAD_SHADER->uploadUniformMat4(mCamera->getProjMatrix(), "uProjMatrix");
+        QUAD_TEXTURE_SHADER->uploadUniformMat4(transformMatrix, "uTransformMatrix");
 
         const static int textureSlot = 0;
         texture->bind(textureSlot);
-        QUAD_SHADER->uploadUniformInt(textureSlot, "uTexture");
+        QUAD_TEXTURE_SHADER->uploadUniformInt(textureSlot, "uTexture");
 
-        submit(QUAD_SHADER, QUAD_VERTEX_ARRAY);
+        submit(QUAD_TEXTURE_SHADER, QUAD_VERTEX_ARRAY);
     }
 
     std::shared_ptr<IVertexArray> Renderer::createVertexArray()

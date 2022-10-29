@@ -13,7 +13,10 @@ namespace Render
     OpenGLShader::OpenGLShader(const std::string& vertexsSrc, const std::string& fragmentSrc) 
         : mProgram(0)
     {
+
         init(vertexsSrc, fragmentSrc);
+        auto d = glGetError();
+            d++;
     }
 
     void OpenGLShader::init(const std::string& vertexsSrc, const std::string& fragmentSrc)
@@ -152,13 +155,30 @@ namespace Render
         return true;
     }
 
-    bool OpenGLShader::uploadUniformInt(int uniformInt, const std::string& name) 
+    bool OpenGLShader::uploadUniformVec4(const glm::vec4& vec, const std::string& name) 
     {
         GLint location = glGetUniformLocation(mProgram, name.c_str());
         if(location == -1)
             return false;
 
+        glUniform4f(location, vec[0], vec[1], vec[2], vec[3]);
+        return true;
+    }
+
+    bool OpenGLShader::uploadUniformInt(int uniformInt, const std::string& name) 
+    {
+
+        GLint location = glGetUniformLocation(mProgram, name.c_str());
+        if(location == -1)
+            return false;
+         
+        auto a= glGetError();
+            a++;
         glUniform1i(location, uniformInt);
+        auto d = glGetError();
+            d++;
+            d--;
+            d = glGetError();
         return true;
     }
 

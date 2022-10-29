@@ -117,6 +117,9 @@ namespace Render {
 		}
 
 		mVertexBuffers.push_back(vertexBuffer);
+        
+        glBindVertexArray(0); // TODO: do unbind on exit
+        vertexBuffer->unbind();
 	}
 
 	void OpenGLVertexArray::setIndexBuffer(const std::shared_ptr<IIndexBuffer>& indexBuffer)
@@ -125,6 +128,8 @@ namespace Render {
 		indexBuffer->bind();
 
 		mIndexBuffer = indexBuffer;
+        glBindVertexArray(0);
+        indexBuffer->unbind();
 	}
 
 }

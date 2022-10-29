@@ -32,8 +32,10 @@ namespace Render {
 
     void OpenGLRenderer::drawIndexed(std::shared_ptr<IVertexArray> vertexArray) 
     {
+        vertexArray->bind();
         glDrawElements(GL_TRIANGLES, vertexArray->getIndexBuffer()->getCount(),
             GL_UNSIGNED_INT, nullptr);
+        vertexArray->unbind();
     }
 
     void OpenGLRenderer::setViewport(uint32_t width, uint32_t height) 

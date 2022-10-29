@@ -23,6 +23,9 @@ namespace Hurma {
 	OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
 		: mPath(path)
 	{
+        auto d = glGetError();
+        d++;
+
 		int width, height, channels;
 		stbi_set_flip_vertically_on_load(1);
 		stbi_uc* data = nullptr;
@@ -66,6 +69,8 @@ namespace Hurma {
 			glTextureSubImage2D(mRendererID, 0, 0, 0, mWidth, mHeight, dataFormat, GL_UNSIGNED_BYTE, data);
 
 			stbi_image_free(data);
+            auto d = glGetError();
+            d++;
 		}
 	}
 

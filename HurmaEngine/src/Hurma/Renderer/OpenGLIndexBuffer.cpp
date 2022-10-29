@@ -36,6 +36,8 @@ namespace Render
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mRendererID);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
 
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
         return true;
     }
 
