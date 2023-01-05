@@ -10,9 +10,9 @@ workspace "HurmaEngine"
 	
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
-include "HurmaEngine/3dParty/GLFW"
-include "HurmaEngine/3dParty/GLAD"
-include "HurmaEngine/3dParty/ImGui"
+include "HurmaEngine/3dparty/GLFW"
+include "HurmaEngine/3dparty/GLAD"
+include "HurmaEngine/3dparty/ImGui"
 	
 project "HurmaEngine"
 	location "HurmaEngine"
