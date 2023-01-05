@@ -28,9 +28,14 @@ namespace Hurma
 
         virtual CameraProjType getProjType() const = 0;
         virtual void setAspectRatio(float aspectRatio) = 0;
+
+        virtual void zoom(float factor) = 0;
     
         inline const glm::mat4& getProjMatrix() const { return mProjMatrix; }
         inline const glm::mat4& getViewMatrix() const { return mViewMatrix; }
+
+        inline const glm::vec3& getEye() { return mEye; }
+        inline const glm::vec3& getCenter() { return mCenter; }
     
         inline void setEye(const glm::vec3& newEye) { mEye = newEye; recomputeViewMatrix(); }
         inline void setCenter(const glm::vec3& newCenter) { mCenter = newCenter; recomputeViewMatrix(); }
@@ -43,9 +48,20 @@ namespace Hurma
             recomputeViewMatrix();
         }
 
-        void rotateCamera(const glm::vec3& vec)
+        void rotateCamera(const glm::vec2& vec)
         {
-            mEye += vec;
+            glm::vec3 eyeCenter = mCenter - mEye;
+            float eyeCenterLength = glm::length(eyeCenter);
+            float upAngle = atan(vec.y / eyeCenterLength);
+            float sideAngle = atan(vec.x / eyeCenterLength);
+
+            glm::vec3 verticalRotationVec = glm::cross(mUp, eyeCenter);
+            glm::vec3 horizontalRotationVec = mUp;
+
+            glm::mat4 rotation = glm::rotate(glm::mat4(1.f), upAngle, verticalRotationVec) * glm::rotate(glm::mat4(1.f), sideAngle, horizontalRotationVec);
+            mEye = rotation * glm::vec4{ mEye, 1.f };
+            mUp = rotation * glm::vec4{ mUp, 0.f };
+
             recomputeViewMatrix();
         }
     

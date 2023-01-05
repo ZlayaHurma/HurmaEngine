@@ -167,7 +167,18 @@ namespace Render
         return true;
     }
 
-    bool OpenGLShader::uploadUniformInt(int uniformInt, const std::string& name) 
+    bool OpenGLShader::uploadUniformVec3(const glm::vec3& vec, const std::string& name)
+    {
+        GLint location = glGetUniformLocation(mProgram, name.c_str());
+        if(location == -1)
+            return false;
+
+        glUseProgram(mProgram);
+        glUniform3f(location, vec[0], vec[1], vec[2]);
+        return true;
+    }
+
+    bool OpenGLShader::uploadUniformInt(int uniformInt, const std::string& name)
     {
 
         GLint location = glGetUniformLocation(mProgram, name.c_str());

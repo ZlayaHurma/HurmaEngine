@@ -30,6 +30,9 @@ namespace Render
         static void draw2DQuad(const glm::vec2& worldPosition, float sideLength, float angleRad, const glm::vec4& color);
         static void draw2DQuad(const glm::vec2& worldPosition, float sideLength, float angleRad, std::shared_ptr<ITexture> texture);
 
+        static void drawCube(const glm::vec3& worldPosition, float sideLength, const glm::vec4& color);
+        
+        static void setLightDirection(const glm::vec3& lightDir);
 
         static std::shared_ptr<IVertexArray> createVertexArray();
         static std::shared_ptr<IVertexBuffer> createVertexBuffer(VertexComp* vertices, uint32_t size);
@@ -47,6 +50,7 @@ namespace Render
         #pragma warning(push)
         #pragma warning(disable:4251)
         static std::shared_ptr<Camera> mCamera;
+        static glm::vec3 mLightDir;
         #pragma warning(pop)
 
         static IRendererAPI* mRendererAPI;

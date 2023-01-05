@@ -26,14 +26,14 @@ namespace Hurma
 
         void update(double deltaTimeSec)
         {
-            mRemainingLifetime -= deltaTimeSec;
+            mRemainingLifetime -= static_cast<float>(deltaTimeSec);
             if (mRemainingLifetime < Constants::TimeErrorSec)
                 return;
 
-            float deltaLegth = deltaTimeSec * mFlySpeed;
+            float deltaLegth = static_cast<float>(deltaTimeSec * mFlySpeed);
             mPosition = mPosition + mFlyDirection * deltaLegth;
 
-            mRotationAngle = mRotationAngle + deltaTimeSec * mRotationSpeedRadPerSec;
+            mRotationAngle = static_cast<float>(mRotationAngle + deltaTimeSec * mRotationSpeedRadPerSec);
             if (mRotationAngle > glm::two_pi<float>())
                 mRotationAngle -= glm::two_pi<float>();
 

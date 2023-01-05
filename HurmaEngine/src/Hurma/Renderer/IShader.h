@@ -15,6 +15,7 @@ namespace Render {
 
         virtual bool uploadUniformMat4(const glm::mat4& matrix, const std::string& name) = 0;
         virtual bool uploadUniformVec4(const glm::vec4& vec, const std::string& name) = 0;
+        virtual bool uploadUniformVec3(const glm::vec3& vec, const std::string& name) = 0;
         virtual bool uploadUniformInt(int uniformInt, const std::string& name) = 0;
     };
 

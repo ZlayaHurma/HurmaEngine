@@ -27,6 +27,15 @@ namespace Hurma
             mProjMatrix = glm::ortho(mLeft * aspectRatio, mRight * aspectRatio, mBottom, mTop, mZNear, mZFar);
         }
 
+        void zoom(float factor) override
+        {
+            mLeft *= factor;
+            mRight *= factor;
+            mTop *= factor;
+            mBottom *= factor;
+            mProjMatrix = glm::ortho(mLeft, mRight, mBottom, mTop, mZNear, mZFar);
+        }
+
     private:
         float mLeft;
         float mRight;

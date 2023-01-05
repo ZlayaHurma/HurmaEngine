@@ -19,7 +19,11 @@ namespace Hurma
         float quadsLifetimeSec {};
         float dispersalSpeed {};
         float rotationSpeedRadSec {};
+
+        #pragma warning(push)
+        #pragma warning(disable:4251)
         glm::vec4 groupColor {};
+        #pragma warning(pop)
     };
 
     class HURMA_API QuadsParticleSystem2D
@@ -37,8 +41,11 @@ namespace Hurma
         void clearDeadParticles();
 
     private:
+        #pragma warning(push)
+        #pragma warning(disable:4251)
         std::vector<ParticleQuad> mParticleQuads;
         std::unique_ptr<IParticle2DLinearDirectionProvider> mDirectionProvider;
+        #pragma warning(pop)
     };
 
 }
