@@ -4,7 +4,6 @@
 [submodule "HurmaEngine/3dparty/spdlog"]
 	path = HurmaEngine/3dparty/spdlog
 	url = https://github.com/gabime/spdlog
-	
 [submodule "HurmaEngine/3dParty/GLFW"]
 	path = HurmaEngine/3dParty/GLFW
 	url = https://github.com/TheCherno/GLFW
